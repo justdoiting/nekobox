@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/dll/runtime_symbol_info.hpp>
+
 #include "3rdparty/qv2ray/wrapper.hpp"
 #include <QDebug>
 #include <QFile>
@@ -15,6 +17,10 @@
 #endif
 //
 
+
+bool createSymlink(const QString &targetPath, const QString &linkPath);
+
+bool isFileInDirectoryOrSubdirectory(const QString &filePath, const QString &dirPath);
 QString defStr(const QString &value, const QString def);
 
 #ifndef KEY_VALUE_RANGE
@@ -120,18 +126,67 @@ template <typename T> auto asListRange(QList<T> &&list) {
   ConfJsMap X::_map() {                                                        \
     MAP_BODY
 
-#define INIT_MAP_1                                                             \
+#define NEW_MAP                                                             \
   virtual ConfJsMap _map() override {                                          \
     MAP_BODY
 
-#define INIT_MAP                                                               \
-  INIT_MAP_1                                                                   \
-  ptr = AbstractBean::_map();
+#define INIT_MAP(X)                                                               \
+  NEW_MAP                                                                   \
+  ptr = X::_map();
+
+#define INIT_BEAN_MAP INIT_MAP(Configs::AbstractBean)
 
 #define STOP_MAP                                                               \
   init = true;                                                                 \
   return ptr;                                                                  \
   }
+
+
+
+#ifdef DEBUG_MODE
+
+#define DEBUG_INIT_ENUM qDebug() << "CALLED INIT ENUM" << init;         \
+{                                                                       \
+   std::ostringstream oss;                                              \
+   bool first = true;                                                   \
+   for (auto it = ptr.left.begin(); it != ptr.left.end(); ++it) {       \
+       if (!first) oss << ", ";                                         \
+       oss << it->first.get_name().toStdString() << ":" << it->second;  \
+       first = false;                                                   \
+   }                                                                    \
+   qDebug() <<  oss.str().c_str();                                      \
+}
+
+#else
+#define DEBUG_INIT_ENUM
+#endif
+
+#define STOP_ENUM STOP_MAP ; };
+
+#define INIT_ENUM(Name)                                                  \
+class Name##Enum: public JsonEnum {                               \
+public:                                                                 \
+    template<typename T>                                                \
+    explicit Name##Enum(T t){ this->set(t); };                    \
+    using JsonEnum::operator=;                                          \
+    virtual const boost::bimap<EnumFieldName, int>& _map()               \
+        const override{                                                        \
+        static boost::bimap<EnumFieldName, int> ptr;                     \
+        static bool init = false;                 DEBUG_INIT_ENUM              \
+        if (init) return ptr;
+
+#ifdef DEBUG_MODE
+#define ADD_ENUM(K, V) ptr.insert({EnumFieldName(K), V}); qDebug() << "ADD ENUM" << K << V ;
+#else
+#define ADD_ENUM(K, V) ptr.insert({EnumFieldName(K), V})
+#endif
+#define ADD_ENUM_LIST(K, I)                             \
+{                                                       \
+    int pref = I;                                       \
+    for (int i = 0, n = K.size(); i < n; i ++){         \
+        ADD_ENUM(K.at(i), i + pref);      \
+    }                                                   \
+}
 
 #define ADD_MAP(X, Y, B) _put(ptr, X, &this->Y)
 //, ITEM_TYPE(B))
@@ -148,8 +203,8 @@ inline QString software_build_date;
 inline QString software_name;
 inline QString software_core_name;
 
-#define root_directory QApplication::applicationDirPath()
-#define software_path QApplication::applicationFilePath()
+inline QString root_directory;// = QString(boost::dll::program_location().parent_path().string().c_str());
+inline QString software_path;//  = QString(boost::dll::program_location().string().c_str());
 
 // MainWindow functions
 inline std::function<void(QString)> MW_show_log;
@@ -194,7 +249,7 @@ QByteArray DecodeB64IfValid(const QString &input,
 class QUrlQuery;
 
 #define GetQuery(url)                                                          \
-  QUrlQuery((url).query(QUrl::ComponentFormattingOption::FullyDecoded));
+  QUrlQuery(url.query(QUrl::ComponentFormattingOption::FullyDecoded));
 
 QString GetQueryValue(const QUrlQuery &q, const QString &key,
                       const QString &def = "");
@@ -268,7 +323,6 @@ QString DisplayAddress(QString serverAddress, int serverPort);
 QString DisplayDest(const QString &dest, QString domain);
 
 // Format & Misc
-
 int MkPort();
 
 QString DisplayTime(long long time, int formatType = 0);

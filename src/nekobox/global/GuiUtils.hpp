@@ -78,6 +78,11 @@ inline QString joinCommand(const QStringList &arguments) {
     ui->a->setValidator(QRegExpValidator_Number);
 #define P_SAVE_INT(a) bean->a = ui->a->text().toInt();
 
+
+#define SP_LOAD_INT(a)                    \
+    ui->a->setValue(bean->a);
+#define SP_SAVE_INT(a) bean->a = ui->a->value();
+
 #define D_LOAD_INT(a)                                  \
     ui->a->setText(QString::number(Configs::dataStore->a)); \
     ui->a->setValidator(QRegExpValidator_Number);
@@ -90,6 +95,10 @@ inline QString joinCommand(const QStringList &arguments) {
 
 #define P_LOAD_COMBO_STRING(a) ui->a->setCurrentText(bean->a);
 #define P_SAVE_COMBO_STRING(a) bean->a = ui->a->currentText();
+
+
+#define P_LOAD_COMBO_STRING_PTR(a) ui->a->setCurrentText(*bean->a);
+#define P_SAVE_COMBO_STRING_PTR(a) *bean->a = ui->a->currentText();
 
 #define D_LOAD_COMBO_STRING(a) ui->a->setCurrentText(Configs::dataStore->a);
 #define D_SAVE_COMBO_STRING(a) Configs::dataStore->a = ui->a->currentText();
@@ -176,8 +185,6 @@ QWidget *GetMessageBoxParent();
       QMessageBox::information(this, T, X) ;                        \
 })                                                                  \
 
-void ActivateWindow(QWidget *w);
-
 void ToggleWindow(QWidget *w);
 
 void runOnUiThread(const std::function<void()> &callback);
@@ -206,8 +213,35 @@ inline bool isDarkMode() {
 #endif
 }
 
+namespace Configs {
+class Shortcuts : public JsonStore
+{
+public:
+
+    DECLARE_STORE_TYPE(Shortcuts)
+    bool legacy = false;
+    virtual ConfJsMap _map() override;
+    QVariantMap shortcuts;
+    virtual bool UnknownKeyHash(const QByteArray & array) override;
+
+    explicit Shortcuts();
+};
+
+class ShortcutsOld : public JsonStore
+{
+public:
+
+    DECLARE_STORE_TYPE(Shortcuts)
+    virtual ConfJsMap _map() override;
+    QStringList shortcuts;
+
+    explicit ShortcutsOld();
+};
+}
+
 struct ProxyColorRule : public JsonStore {
     virtual ConfJsMap _map() override;
+    DECLARE_STORE_TYPE(NoSave)
     ProxyColorRule(int, int, int, int, bool, QColor);
     int orderMin;
     int orderRange;
@@ -218,6 +252,7 @@ struct ProxyColorRule : public JsonStore {
 };
 
 struct IndicatorRule : public JsonStore {
+    DECLARE_STORE_TYPE(NoSave)
     virtual ConfJsMap _map() override;
     IndicatorRule(double, double, double, QColor);
     IndicatorRule();

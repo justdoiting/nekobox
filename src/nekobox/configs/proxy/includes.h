@@ -1,6 +1,7 @@
 #pragma once
 
-#include "SocksHttpBean.hpp"
+#include "HttpBean.hpp"
+#include "SocksBean.hpp"
 #include "ShadowSocksBean.hpp"
 #include "ChainBean.hpp"
 #include "VMessBean.hpp"
@@ -16,3 +17,6 @@
 #include "MieruBean.hpp"
 #include "ShadowTLSBean.hpp"
 #include "TorBean.hpp"
+#include "NaiveBean.hpp"
+#include "TrustTunnelBean.hpp"
+#include "JuicityBean.hpp"

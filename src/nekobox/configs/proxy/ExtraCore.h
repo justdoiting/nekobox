@@ -12,9 +12,9 @@ namespace Configs {
         QString extraCoreConf;
         bool noLogs;
 
-        ExtraCoreBean() : AbstractBean(0) {
+        ExtraCoreBean(Configs::ProxyEntity * entity) : AbstractBean(entity, 0) {
         }
-        INIT_MAP
+        INIT_BEAN_MAP
             ADD_MAP("socks_address", socksAddress, string);
             ADD_MAP("socks_port", socksPort, integer);
             ADD_MAP("extra_core_path", extraCorePath, string);
@@ -22,14 +22,19 @@ namespace Configs {
             ADD_MAP("extra_core_conf", extraCoreConf, string);
             ADD_MAP("no_logs", noLogs, boolean);
         STOP_MAP
-        QString DisplayType() override { return "ExtraCore"; };
+ //       QString DisplayType() override { return "ExtraCore"; };
 
-        CoreObjOutboundBuildResult BuildCoreObjSingBox() override;
+        CoreObjOutboundBuildResult BuildCoreObjSingBox() const override;
 
-        bool TryParseLink(const QString &link);
+        bool TryParseLink(const QString &link) override;
 
-        bool TryParseJson(const QJsonObject &obj);
+        bool TryParseJson(const QJsonObject &obj) override;
 
-        QString ToShareLink() override;
+        virtual QString type()const override {
+            return "extra";
+        };
+
+
+        QString ToShareLink() const override;
     };
 }

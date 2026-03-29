@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
+    <width>843</width>
     <height>600</height>
    </rect>
   </property>
@@ -18,6 +18,9 @@
   </property>
   <property name="windowTitle">
    <string notr="true">qr243vbi</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0">
@@ -228,10 +231,7 @@
       <item>
        <widget class="QPushButton" name="url_test_button">
         <property name="text">
-         <string>URL Test</string>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
+         <string>Test</string>
         </property>
        </widget>
       </item>
@@ -334,206 +334,208 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="aaaaaaaaaaaaaaaaaa">
-       <layout class="QVBoxLayout" name="aaaaaaaaaaaa" stretch="0">
-        <item>
-         <widget class="QWidget" name="down_tab" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="spacing">
-            <number>0</number>
+      <widget class="QTabWidget" name="stats_widget">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="tabPosition">
+        <enum>QTabWidget::TabPosition::North</enum>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::TabShape::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <property name="elideMode">
+        <enum>Qt::TextElideMode::ElideNone</enum>
+       </property>
+       <property name="usesScrollButtons">
+        <bool>true</bool>
+       </property>
+       <property name="documentMode">
+        <bool>true</bool>
+       </property>
+       <property name="tabsClosable">
+        <bool>false</bool>
+       </property>
+       <property name="movable">
+        <bool>true</bool>
+       </property>
+       <property name="tabBarAutoHide">
+        <bool>false</bool>
+       </property>
+       <widget class="QWidget" name="Logs">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="title">
+         <string>Logs</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+         </property>
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QTextBrowser" name="masterLogBrowser">
+           <property name="contextMenuPolicy">
+            <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
            </property>
-           <property name="leftMargin">
-            <number>0</number>
+           <property name="openLinks">
+            <bool>false</bool>
            </property>
-           <property name="topMargin">
-            <number>0</number>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="connections_tab">
+        <attribute name="title">
+         <string>Connections</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+         </property>
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QTableWidget" name="connections">
+           <property name="autoFillBackground">
+            <bool>false</bool>
            </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QTabWidget" name="stats_widget">
-             <property name="autoFillBackground">
-              <bool>true</bool>
-             </property>
-             <property name="tabPosition">
-              <enum>QTabWidget::TabPosition::North</enum>
-             </property>
-             <property name="tabShape">
-              <enum>QTabWidget::TabShape::Rounded</enum>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <property name="elideMode">
-              <enum>Qt::TextElideMode::ElideNone</enum>
-             </property>
-             <property name="usesScrollButtons">
-              <bool>true</bool>
-             </property>
-             <property name="documentMode">
-              <bool>true</bool>
-             </property>
-             <property name="tabsClosable">
-              <bool>false</bool>
-             </property>
-             <property name="movable">
-              <bool>true</bool>
-             </property>
-             <property name="tabBarAutoHide">
-              <bool>false</bool>
-             </property>
-             <widget class="QWidget" name="Logs">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <attribute name="title">
-               <string>Logs</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="sizeConstraint">
-                <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
-               </property>
-               <property name="leftMargin">
-                <number>1</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>1</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QTextBrowser" name="masterLogBrowser">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
-                 </property>
-                 <property name="openLinks">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="connections_tab">
-              <attribute name="title">
-               <string>Connections</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="sizeConstraint">
-                <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
-               </property>
-               <property name="leftMargin">
-                <number>1</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>1</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QTableWidget" name="connections">
-                 <property name="autoFillBackground">
-                  <bool>false</bool>
-                 </property>
-                 <column>
-                  <property name="text">
-                   <string>Destination (Domain)</string>
-                  </property>
-                  <property name="toolTip">
-                   <string>Click To Disable Sorting</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>Process</string>
-                  </property>
-                  <property name="toolTip">
-                   <string>Click To Sort By Process</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>Protocol</string>
-                  </property>
-                  <property name="toolTip">
-                   <string>Click To Sort By Protocol</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>Outbound</string>
-                  </property>
-                  <property name="toolTip">
-                   <string>Click To Sort By Outbound</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>Traffic</string>
-                  </property>
-                  <property name="toolTip">
-                   <string>Click To Toggle sort by Traffic</string>
-                  </property>
-                 </column>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="graph_tab">
-              <attribute name="title">
-               <string>Traffic Graph</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="sizeConstraint">
-                <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
-               </property>
-               <property name="leftMargin">
-                <number>1</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>1</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
+           <column>
+            <property name="text">
+             <string>Destination (Domain)</string>
+            </property>
+            <property name="toolTip">
+             <string>Click To Disable Sorting</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Process</string>
+            </property>
+            <property name="toolTip">
+             <string>Click To Sort By Process</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Protocol</string>
+            </property>
+            <property name="toolTip">
+             <string>Click To Sort By Protocol</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Outbound</string>
+            </property>
+            <property name="toolTip">
+             <string>Click To Sort By Outbound</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Traffic</string>
+            </property>
+            <property name="toolTip">
+             <string>Click To Toggle sort by Traffic</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="graph_tab">
+        <attribute name="title">
+         <string>Traffic Graph</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+         </property>
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QLabel" name="label_speed">
+        <property name="styleSheet">
+         <string notr="true">border-radius: 10px;
+border: 3px solid palette(midlight);
+font: inherit;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_running">
+        <property name="styleSheet">
+         <string notr="true">border-radius: 10px;
+border: 3px solid palette(midlight);
+font: inherit;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_inbound">
+        <property name="styleSheet">
+         <string notr="true">border-radius: 10px;
+border: 3px solid palette(midlight);
+font: inherit;</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -555,26 +557,6 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QLabel" name="label_inbound">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_speed">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -584,7 +566,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>843</width>
      <height>23</height>
     </rect>
    </property>
@@ -610,6 +592,7 @@
     <addaction name="actionRestart_Proxy"/>
     <addaction name="actionRestart_Program"/>
     <addaction name="menu_exit"/>
+    <addaction name="menu_information"/>
    </widget>
    <widget class="QMenu" name="menu_preferences">
     <property name="title">
@@ -622,52 +605,63 @@
     <addaction name="menu_hotkey_settings"/>
     <addaction name="menu_open_config_folder"/>
    </widget>
-   <widget class="QMenu" name="menu_server">
+   <widget class="QMenu" name="menu_profiles">
     <property name="title">
-     <string>Server</string>
+     <string>Profiles</string>
     </property>
-    <widget class="QMenu" name="menu_share_item">
-     <property name="title">
-      <string>Share</string>
-     </property>
-     <addaction name="menu_qr"/>
-     <addaction name="menu_export_config"/>
-     <addaction name="separator"/>
-     <addaction name="menu_copy_links"/>
-     <addaction name="menu_copy_links_nkr"/>
-    </widget>
     <widget class="QMenu" name="menuCurrent_group">
      <property name="title">
-      <string>Current group</string>
+      <string>Current Group</string>
      </property>
      <addaction name="separator"/>
     </widget>
-    <widget class="QMenu" name="menu_test">
+    <widget class="QMenu" name="menu_server">
      <property name="title">
-      <string>Test</string>
+      <string>Current Selected</string>
      </property>
-     <addaction name="actionUrl_Test_Selected"/>
-     <addaction name="actionUrl_Test_Clear"/>
-     <addaction name="actionSpeedtest_Selected"/>
-     <addaction name="actionDownloadtest_Selected"/>
-     <addaction name="actionUploadtest_Selected"/>
-     <addaction name="actionCountrytest_Selected"/>
-     <addaction name="actionSimpledl_Selected"/>
+     <widget class="QMenu" name="menu_share_item">
+      <property name="title">
+       <string>Share</string>
+      </property>
+      <addaction name="menu_qr"/>
+      <addaction name="menu_export_config"/>
+      <addaction name="separator"/>
+      <addaction name="menu_copy_links"/>
+      <addaction name="menu_copy_links_nkr"/>
+     </widget>
+     <widget class="QMenu" name="menu_test">
+      <property name="title">
+       <string>Test</string>
+      </property>
+      <addaction name="actionUrl_Test_Selected"/>
+      <addaction name="actionUrl_Test_Clear"/>
+      <addaction name="actionSpeedtest_Selected"/>
+      <addaction name="actionDownloadtest_Selected"/>
+      <addaction name="actionUploadtest_Selected"/>
+      <addaction name="actionCountrytest_Selected"/>
+      <addaction name="actionSimpledl_Selected"/>
+     </widget>
+     <addaction name="menu_start"/>
+     <addaction name="menu_stop"/>
+     <addaction name="menu_edit"/>
+     <addaction name="menu_select_all"/>
+     <addaction name="separator"/>
+     <addaction name="menu_share_item"/>
+     <addaction name="menu_clone"/>
+     <addaction name="menu_move_profile"/>
+     <addaction name="menu_delete"/>
+     <addaction name="separator"/>
+     <addaction name="menu_resolve_selected"/>
+     <addaction name="menu_reset_traffic"/>
+     <addaction name="menu_test"/>
     </widget>
-    <addaction name="menu_profiles"/>
+    <addaction name="menu_add_from_clipboard"/>
+    <addaction name="actionAdd_new_Group"/>
+    <addaction name="menu_add_from_input"/>
+    <addaction name="actionAdd_profile_from_File"/>
+    <addaction name="menu_scan_qr"/>
     <addaction name="separator"/>
-    <addaction name="menu_start"/>
-    <addaction name="menu_stop"/>
-    <addaction name="menu_edit"/>
-    <addaction name="menu_select_all"/>
-    <addaction name="separator"/>
-    <addaction name="menu_share_item"/>
-    <addaction name="menu_clone"/>
-    <addaction name="menu_delete"/>
-    <addaction name="separator"/>
-    <addaction name="menu_resolve_selected"/>
-    <addaction name="menu_reset_traffic"/>
-    <addaction name="menu_test"/>
+    <addaction name="menu_server"/>
     <addaction name="menuCurrent_group"/>
    </widget>
    <widget class="QMenu" name="menuHidden_menu">
@@ -677,7 +671,6 @@
     <addaction name="menu_update_subscription"/>
     <addaction name="menu_resolve_domain"/>
     <addaction name="menu_remove_invalid"/>
-    <addaction name="actionUrl_Test_Group"/>
     <addaction name="menu_remove_unavailable"/>
     <addaction name="menu_clear_test_result"/>
     <addaction name="menu_delete_repeat"/>
@@ -688,23 +681,31 @@
      <string>Routing Menu</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_profiles">
+   <widget class="QMenu" name="menuTest">
     <property name="title">
-     <string>Profiles</string>
+     <string>Test</string>
     </property>
-    <addaction name="menu_add_from_clipboard"/>
-    <addaction name="actionAdd_new_Group"/>
-    <addaction name="menu_add_from_input"/>
-    <addaction name="actionAdd_profile_from_File"/>
-    <addaction name="menu_scan_qr"/>
+    <addaction name="actionUrl_Test_Group"/>
     <addaction name="actionSpeedtest_Current"/>
+   </widget>
+   <widget class="QMenu" name="menuContext">
+    <property name="title">
+     <string>Context</string>
+    </property>
+    <widget class="QMenu" name="menuContextProfiles">
+     <property name="title">
+      <string>ContextProfiles</string>
+     </property>
+    </widget>
+    <addaction name="menuContextProfiles"/>
    </widget>
    <addaction name="menu_program"/>
    <addaction name="menu_preferences"/>
-   <addaction name="menu_server"/>
+   <addaction name="menu_profiles"/>
    <addaction name="menuHidden_menu"/>
    <addaction name="menuRouting_Menu"/>
-   <addaction name="menu_profiles"/>
+   <addaction name="menuTest"/>
+   <addaction name="menuContext"/>
   </widget>
   <action name="menu_exit">
    <property name="text">
@@ -934,7 +935,7 @@
   </action>
   <action name="menu_copy_links_nkr">
    <property name="text">
-    <string>Copy links of selected (Custom Links)</string>
+    <string>Copy Custom Links</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+Alt+C</string>
@@ -958,7 +959,7 @@
   </action>
   <action name="menu_copy_links">
    <property name="text">
-    <string>Copy links of selected</string>
+    <string>Copy links</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+C</string>
@@ -1042,10 +1043,10 @@
   </action>
   <action name="actionUrl_Test_Selected">
    <property name="text">
-    <string>Url Test Selected</string>
+    <string>Url Test</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+S</string>
+    <string notr="true">Ctrl+Shift+S</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -1053,7 +1054,7 @@
   </action>
   <action name="actionUrl_Test_Clear">
    <property name="text">
-    <string>Clear Test Result Selected</string>
+    <string>Clear Test Result</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -1067,7 +1068,7 @@
     <string>Url Test Group</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+G</string>
+    <string notr="true">Ctrl+Shift+G</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -1075,7 +1076,7 @@
   </action>
   <action name="menu_resolve_selected">
    <property name="text">
-    <string>Resolve Selected Domain</string>
+    <string>Resolve Domain</string>
    </property>
    <property name="visible">
     <bool>true</bool>
@@ -1086,20 +1087,10 @@
     <string>Remove Invalid</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Alt+I</string>
+    <string notr="true">Ctrl+Alt+I</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::TextHeuristicRole</enum>
-   </property>
-  </action>
-  <action name="menu_open_routing_manager">
-   <property name="text">
-    <string>Open Manager</string>
-   </property>
-  </action>
-  <action name="actionSpeedtest_Current">
-   <property name="text">
-    <string>Speedtest Current</string>
    </property>
   </action>
   <action name="actionSpeedtest_Selected">
@@ -1150,6 +1141,29 @@
   <action name="menu_security_settings">
    <property name="text">
     <string>Security Settings</string>
+   </property>
+  </action>
+  <action name="menu_move_profile">
+   <property name="text">
+    <string>Move</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionSpeedtest_Current">
+   <property name="text">
+    <string>Speedtest Current</string>
+   </property>
+  </action>
+  <action name="actionInformation">
+   <property name="text">
+    <string>Information</string>
+   </property>
+  </action>
+  <action name="menu_information">
+   <property name="text">
+    <string>Information</string>
    </property>
   </action>
  </widget>

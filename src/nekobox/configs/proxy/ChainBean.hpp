@@ -7,15 +7,20 @@ namespace Configs {
     public:
         QList<int> list; // in to out
 
-        ChainBean() : AbstractBean(0) {
+        ChainBean(Configs::ProxyEntity * entity) : AbstractBean(entity, 0) {
         }
         
-        INIT_MAP
+        INIT_BEAN_MAP
             ADD_MAP("list", list, integerList);
         STOP_MAP
 
-        QString DisplayType() override { return QObject::tr("Chain Proxy"); };
+  //      QString DisplayType() override { return QObject::tr("Chain Proxy"); };
 
-        QString DisplayAddress() override { return ""; };
+  //      QString DisplayAddress() override { return ""; };
+
+        virtual QString type()const override {
+            return "chain";
+        };
+
     };
 } // namespace Configs

@@ -12,12 +12,17 @@ namespace Configs {
         QString idle_session_timeout = "30s";
         int min_idle_session = 0;
 
-        std::shared_ptr<V2rayStreamSettings> stream = std::make_shared<V2rayStreamSettings>();
+        std::shared_ptr<V2rayStreamSettings> stream ;
 
-        AnyTLSBean() : AbstractBean(0) {
+        AnyTLSBean(Configs::ProxyEntity * entity) : AbstractBean(entity, 0) {
+            stream = std::make_shared<V2rayStreamSettings>();
         }
+
+        virtual QString type()const override {
+            return "anytls";
+        };
         
-        INIT_MAP
+        INIT_BEAN_MAP
             ADD_MAP("password", password, string);
             ADD_MAP("session_idle_check_interval", idle_session_check_interval, string);
             ADD_MAP("session_idle_timeout", idle_session_timeout, string);
@@ -25,14 +30,14 @@ namespace Configs {
             ADD_MAP("stream", stream, jsonStore);
         STOP_MAP
 
-        QString DisplayType() override { return "AnyTLS"; };
+     //   QString DisplayType() override { return "AnyTLS"; };
 
-        CoreObjOutboundBuildResult BuildCoreObjSingBox() override;
+        CoreObjOutboundBuildResult BuildCoreObjSingBox()const override;
 
-        bool TryParseLink(const QString &link);
+        bool TryParseLink(const QString &link) override;
 
-        bool TryParseJson(const QJsonObject &obj);
+        bool TryParseJson(const QJsonObject &obj) override;
 
-        QString ToShareLink() override;
+        QString ToShareLink()const override;
     };
 } // namespace Configs

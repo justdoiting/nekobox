@@ -27,10 +27,10 @@ namespace Configs {
         int underload_packet_magic_header = 0;
         int transport_packet_magic_header = 0;
 
-        WireguardBean() : AbstractBean(0) {
+        WireguardBean(Configs::ProxyEntity * entity) : AbstractBean(entity, 0) {
         }
 
-        INIT_MAP
+        INIT_BEAN_MAP
             ADD_MAP("private_key", privateKey, string);
             ADD_MAP("public_key", publicKey, string);
             ADD_MAP("pre_shared_key", preSharedKey, string);
@@ -53,120 +53,26 @@ namespace Configs {
             ADD_MAP("transport_packet_magic_header", transport_packet_magic_header, integer);
         STOP_MAP
 
-        QString FormatReserved() {
-            QString res = "";
-            for (int i=0;i<reserved.size();i++) {
-                res += QString::number(reserved[i]);
-                if (i != reserved.size() - 1) {
-                    res += "-";
-                }
-            }
-            return res;
-        }
-
+        QString FormatReserved() const;
+/*/
         QString DisplayType() override { return "Wireguard"; };
+*/
+        CoreObjOutboundBuildResult BuildCoreObjSingBox() const override;
 
-        CoreObjOutboundBuildResult BuildCoreObjSingBox() override;
+        bool TryParseLink(const QString &link) override;
 
-        bool TryParseLink(const QString &link);
+        bool TryParseJson(const QJsonObject &obj) override;
 
-        bool TryParseJson(const QJsonObject &obj);
+        QString ToShareLink() const override;
 
-        QString ToShareLink() override;
+        bool IsEndpoint() const override {return true;}
 
-        bool IsEndpoint() override {return true;}
+        virtual QString type()const override {
+            return "wireguard";
+        };
+
 
     private:
-        bool parseWgConfig(const QString &config)
-        {
-            if (!config.contains("[Interface]") || !config.contains("[Peer]")) return false;
-            auto lines = config.split("\n");
-            for (const auto& line : lines)
-            {
-                if (line.trimmed().isEmpty()) continue;
-                if (line.contains("[Interface]") || line.contains("[Peer]")) continue;
-                if (!line.contains("=")) return false;
-                auto eqIdx = line.indexOf("=");
-                if (line.startsWith("PrivateKey"))
-                {
-                    privateKey = line.mid(eqIdx + 1).trimmed();
-                }
-                if (line.startsWith("Address"))
-                {
-                    auto addresses = line.mid(eqIdx + 1).trimmed().split(",");
-                    for (const auto& address : addresses) localAddress.append(address.trimmed());
-                }
-                if (line.startsWith("MTU"))
-                {
-                    MTU = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("PublicKey"))
-                {
-                    publicKey = line.mid(eqIdx + 1).trimmed();
-                }
-                if (line.startsWith("PresharedKey"))
-                {
-                    preSharedKey = line.mid(eqIdx + 1).trimmed();
-                }
-                if (line.startsWith("PersistentKeepalive"))
-                {
-                    persistentKeepalive = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("Endpoint"))
-                {
-                    auto addrPort = line.mid(eqIdx + 1).trimmed();
-                    if (!addrPort.contains(":")) return false;
-                    serverAddress = addrPort.split(":")[0].trimmed();
-                    serverPort = addrPort.split(":")[1].trimmed().toInt();
-                }
-                if (line.startsWith("S1"))
-                {
-                    enable_amnezia = true;
-                    init_packet_junk_size = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("S2"))
-                {
-                    enable_amnezia = true;
-                    response_packet_junk_size = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("Jc"))
-                {
-                    enable_amnezia = true;
-                    junk_packet_count = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("Jmin"))
-                {
-                    enable_amnezia = true;
-                    junk_packet_min_size = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("Jmax"))
-                {
-                    enable_amnezia = true;
-                    junk_packet_max_size = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("H1"))
-                {
-                    enable_amnezia = true;
-                    init_packet_magic_header = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("H2"))
-                {
-                    enable_amnezia = true;
-                    response_packet_magic_header = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("H3"))
-                {
-                    enable_amnezia = true;
-                    underload_packet_magic_header = line.mid(eqIdx + 1).toInt();
-                }
-                if (line.startsWith("H4"))
-                {
-                    enable_amnezia = true;
-                    transport_packet_magic_header = line.mid(eqIdx + 1).toInt();
-                }
-            }
-            name = "Wg file config";
-            return true;
-        };
+        bool parseWgConfig(const QString &config);
     };
 } // namespace Configs

@@ -14,10 +14,10 @@ namespace Configs {
         QStringList hostKeyAlgs;
         QString clientVersion;
 
-        SSHBean() : AbstractBean(0) {
+        SSHBean(Configs::ProxyEntity * entity) : AbstractBean(entity, 0) {
         }
 
-        INIT_MAP
+        INIT_BEAN_MAP
             ADD_MAP("user", user, string);
             ADD_MAP("password", password, string);
             ADD_MAP("privateKey", privateKey, string);
@@ -27,15 +27,20 @@ namespace Configs {
             ADD_MAP("hostKeyAlgs", hostKeyAlgs, stringList);
             ADD_MAP("clientVersion", clientVersion, string);
         STOP_MAP
-
+/*/
         QString DisplayType() override { return "SSH"; };
+*/
+        CoreObjOutboundBuildResult BuildCoreObjSingBox() const override;
 
-        CoreObjOutboundBuildResult BuildCoreObjSingBox() override;
+        bool TryParseLink(const QString &link) override;
 
-        bool TryParseLink(const QString &link);
+        bool TryParseJson(const QJsonObject &obj) override;
 
-        bool TryParseJson(const QJsonObject &obj);
+        QString ToShareLink() const override;
 
-        QString ToShareLink() override;
+        virtual QString type()const override {
+            return "ssh";
+        };
+
     };
 }

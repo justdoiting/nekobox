@@ -1,6 +1,10 @@
+#ifndef DATA_STORE_HEADER
+#define DATA_STORE_HEADER
+
 #include "Const.hpp"
 #include "ConfigItem.hpp"
 #include "Utils.hpp"
+#include <nekobox/configs/proxy/Preset.hpp>
 #ifdef Q_OS_WIN
 #include "nekobox/sys/windows/WinVersion.h"
 #endif
@@ -11,6 +15,7 @@ namespace Configs {
 
     class Routing : public JsonStore {
     public:
+        DECLARE_STORE_TYPE(DefaultRoute)
         virtual ConfJsMap _map() override;
         int current_route_id = 0;
 
@@ -36,29 +41,20 @@ namespace Configs {
         static QStringList List();
     };
 
-    class Shortcuts : public JsonStore
-    {
-    public:
-        virtual ConfJsMap _map() override;
-
-        QMap<QString, QKeySequence> shortcuts;
-
-        QStringList keyVal;
-
-        explicit Shortcuts();
-        virtual bool Save() override;
-
-        virtual bool Load() override;
-    };
+    INIT_ENUM(VpnImplementation)
+        ADD_ENUM_LIST(Preset::SingBox::VpnImplementation, 1)
+    STOP_ENUM
 
     class DataStore : public JsonStore {
     public:
+        DECLARE_STORE_TYPE(NekoBox)
         virtual ConfJsMap _map() override;
         // custom hardware info
         QString sub_custom_hwid_params = ""; 
         // Custom system parameters: format "hwid=value,os=value,osVersion=value,model=value"
         // Running
         int core_port = 19810;
+        std::string core_domain = "127.0.0.1";
         int started_id = -1919;
         bool core_running = false;
         bool prepare_exit = false;
@@ -162,7 +158,6 @@ namespace Configs {
         int remember_id = -1919;
         bool remember_enable = false;
         bool windows_set_admin = false;
-        std::unique_ptr<Shortcuts> shortcuts;
 
         // Socks & HTTP Inbound
         QString inbound_address = "127.0.0.1";
@@ -233,3 +228,21 @@ namespace Configs {
     extern DataStore *dataStore;
 
 } // namespace Configs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif

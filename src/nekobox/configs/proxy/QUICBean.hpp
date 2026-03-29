@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AbstractBean.hpp"
+#include "V2RayStreamSettings.hpp"
+#include "Preset.hpp"
 
 namespace Configs {
     class QUICBean : public AbstractBean {
@@ -60,6 +62,8 @@ namespace Configs {
         QString caText = "";
         bool disableSni = false;
 
+        std::shared_ptr<NetworkEnum> network = std::make_shared<NetworkEnum>("tcp");
+
         #undef _add
         #define _add(X, Y, B, T) _put(X, Y, &this->B) 
             //, ITEM_TYPE(T));
@@ -73,9 +77,7 @@ namespace Configs {
             if (!init){
                 init = true;
                 // Add base AbstractBean fields
-                _add(tuic, "name", name, string);
-                _add(tuic, "addr", serverAddress, string);
-                _add(tuic, "port", serverPort, integer);
+                tuic = AbstractBean::_map();
                 
                 _add(tuic, "forceExternal", forceExternal, boolean);
             // TLS
@@ -84,6 +86,7 @@ namespace Configs {
                 _add(tuic, "alpn", alpn, string);
                 _add(tuic, "caText", caText, string);
                 _add(tuic, "disableSni", disableSni, boolean);
+                _add(tuic, "network", network, string);
 
                 hys1.insert(tuic);
                 _add(hys1, "authPayload", authPayload, string);
@@ -123,7 +126,7 @@ namespace Configs {
 
         #undef _add
 
-        explicit QUICBean(int _proxy_type) : AbstractBean(0) {
+        explicit QUICBean(Configs::ProxyEntity * entity, int _proxy_type) : AbstractBean(entity, 0) {
             proxy_type = _proxy_type;
             if (proxy_type == proxy_Hysteria || proxy_type == proxy_Hysteria2) {
                 if (proxy_type == proxy_Hysteria) { // hy1
@@ -134,7 +137,7 @@ namespace Configs {
             } else if (proxy_type == proxy_TUIC) {
             }
         };
-
+/*
         QString DisplayAddress() override {
             return ::DisplayAddress(serverAddress, serverPort);
         }
@@ -148,13 +151,23 @@ namespace Configs {
                 return "Hysteria2";
             }
         };
+*/
+        CoreObjOutboundBuildResult BuildCoreObjSingBox() const override;
 
-        CoreObjOutboundBuildResult BuildCoreObjSingBox() override;
+        bool TryParseLink(const QString &link) override;
 
-        bool TryParseLink(const QString &link);
+        bool TryParseJson(const QJsonObject &obj) override;
 
-        bool TryParseJson(const QJsonObject &obj);
+        QString ToShareLink() const override;
 
-        QString ToShareLink() override;
+        virtual QString type()const override {
+            if (proxy_type == proxy_TUIC) {
+                return "tuic";
+            } else if (proxy_type == proxy_Hysteria) {
+                return "hysteria";
+            } else {
+                return "hysteria2";
+            }
+        };
     };
 } // namespace Configs

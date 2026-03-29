@@ -1,14 +1,20 @@
 #pragma once
 
-#include "nekobox/dataStore/Configs.hpp"
-#include "nekobox/global/CountryHelper.hpp"
-#include "nekobox/stats/traffic/TrafficData.hpp"
-#include "nekobox/configs/proxy/AbstractBean.hpp"
+#include "Utils.hpp"
+#include "Configs.hpp"
+#include "ConfigItem.hpp"
+#include <nekobox/global/CountryHelper.hpp>
+#include <nekobox/stats/traffic/TrafficData.hpp>
+#include <nekobox/configs/proxy/AbstractBean.hpp>
+#include "DataStore.hpp"
 #include <QColor>
-#include "nekobox/configs/proxy/ExtraCore.h"
+#include <memory>
+#include <nekobox/configs/proxy/ExtraCore.h>
 
 namespace Configs {
-    class SocksHttpBean;
+    class HttpBean;
+
+    class SocksBean;
 
     class ShadowSocksBean;
 
@@ -24,6 +30,10 @@ namespace Configs {
 
     class MieruBean;
 
+    class TrustTunnelBean;
+    
+    class JuicityBean;
+
     class ShadowTLSBean;
 
     class WireguardBean;
@@ -37,99 +47,107 @@ namespace Configs {
     class CustomBean;
 
     class ChainBean;
+
+    class NaiveBean;
 }; // namespace Configs
 
 namespace Configs {
     class ProxyEntity : public JsonStore {
+    private:
+        std::weak_ptr<Configs::AbstractBean> weak_bean;
+        std::shared_ptr<Configs::AbstractBean> strong_bean;
+        bool SavePrivate();
     public:
+
+        DECLARE_STORE_TYPE(Proxies)
+        DECLARE_ID_RETURN
         virtual ConfJsMap _map() override;
+        virtual bool Save() override;
+
+        DECLARE_FLAG(same_path_for_bean, custom_flag2)
+    //    DECLARE_FLAG(bean_path_not_defined, custom_flag)
+
+        bool isValid() const;
 
         QString type;
+
+        QString name = "";
+        QString serverAddress = "127.0.0.1";
+        int serverPort = 1080;
 
         int id = -1;
         int gid = 0;
         int latencyInt = 0;
         int latencyOrder = 0;
+        bool is_working = false;
+
+//        QString bean_cfg;
         QString dl_speed;
         QString ul_speed;
         QString test_country;
-        std::shared_ptr<Configs::AbstractBean> bean;
+        std::shared_ptr<const Configs::AbstractBean> bean() const;
+        virtual bool UnknownKeyHash(const QByteArray & array) override;
         std::shared_ptr<Stats::TrafficData> traffic_data = std::make_shared<Stats::TrafficData>("");
-
         QString full_test_report;
 
-        ProxyEntity(Configs::AbstractBean *bean, const QString &type_);
+        ProxyEntity(const QString &type_);
+        virtual ~ProxyEntity() override;
 
-        bool is_working = false;
         qint64 last_auto_test_time = 0;
+
+        template<typename A>
+        std::shared_ptr<A> unlock(std::shared_ptr<const A> bean){
+            auto ret = this->weak_bean.lock();
+            if ((void*)ret.get() == (void*)bean.get()){
+                if (ret != nullptr){
+                    ret->save_control_no_save(false);
+                }
+                return std::static_pointer_cast<A>(ret);
+            }
+            return nullptr;
+        }
+
+        [[nodiscard]]  QString DisplayAddress();
+
+        [[nodiscard]]  QString DisplayName();
+
+        [[nodiscard]]  QString DisplayCoreType();
+
+        [[nodiscard]]  QString DisplayType();
+
+        [[nodiscard]]  QString DisplayTypeAndName();
+
+        void ResetBeans();
 
         [[nodiscard]] QString DisplayTestResult() const;
 
    //     [[nodiscard]] QColor DisplayLatencyColor() const;
 
-        [[nodiscard]] Configs::ChainBean *ChainBean() const {
-            return (Configs::ChainBean *) bean.get();
-        };
+        #define cast_func(X)         \
+        [[nodiscard]] std::shared_ptr<const Configs::X##Bean> X##Bean() const;
 
-        [[nodiscard]] Configs::SocksHttpBean *SocksHTTPBean() const {
-            return (Configs::SocksHttpBean *) bean.get();
-        };
+        cast_func(Chain)
+        cast_func(Socks)
+        cast_func(Http)
+        cast_func(ShadowSocks)
+        cast_func(VMess)
+        cast_func(TrojanVLESS)
+ //       cast_func(Naive)
+        cast_func(Mieru)
+        cast_func(QUIC)
+        cast_func(AnyTLS)
+        cast_func(ShadowTLS)
+        cast_func(Wireguard)
+        cast_func(Tailscale)
+        cast_func(SSH)
+        cast_func(Tor)
+        cast_func(Custom)
+        cast_func(ExtraCore)
+        cast_func(Naive)
+        cast_func(TrustTunnel)
+        cast_func(Juicity)
 
-        [[nodiscard]] Configs::ShadowSocksBean *ShadowSocksBean() const {
-            return (Configs::ShadowSocksBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::VMessBean *VMessBean() const {
-            return (Configs::VMessBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::TrojanVLESSBean *TrojanVLESSBean() const {
-            return (Configs::TrojanVLESSBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::NaiveBean *NaiveBean() const {
-            return (Configs::NaiveBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::MieruBean *MieruBean() const {
-            return (Configs::MieruBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::QUICBean *QUICBean() const {
-            return (Configs::QUICBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::AnyTLSBean *AnyTLSBean() const {
-            return (Configs::AnyTLSBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::ShadowTLSBean *ShadowTLSBean() const {
-            return (Configs::ShadowTLSBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::WireguardBean *WireguardBean() const {
-            return (Configs::WireguardBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::TailscaleBean *TailscaleBean() const
-        {
-            return (Configs::TailscaleBean *) bean.get();
-        }
-
-        [[nodiscard]] Configs::SSHBean *SSHBean() const {
-            return (Configs::SSHBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::TorBean *TorBean() const {
-            return (Configs::TorBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::CustomBean *CustomBean() const {
-            return (Configs::CustomBean *) bean.get();
-        };
-
-        [[nodiscard]] Configs::ExtraCoreBean *ExtraCoreBean() const {
-            return (Configs::ExtraCoreBean *) bean.get();
-        };
+        #undef cast_func
     };
+
 } // namespace Configs

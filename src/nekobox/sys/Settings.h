@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QSettings>
 #include <nekobox/dataStore/Utils.hpp>
+#include <nekobox/global/GuiUtils.hpp>
 
 #define CONFIG_INI_PATH QDir::current().absolutePath() + "/window.ini"
 
@@ -49,6 +50,7 @@
   };
 
 namespace Configs {
+
 class SettingsValue;
 class SettingsStore {
 public:
@@ -86,6 +88,7 @@ SETTINGS_VALUE(Chr)
 
 class WindowSettings : public SettingsStore {
 public:
+  std::unique_ptr<class Shortcuts> shortcuts;
   QList<std::shared_ptr<SettingsValue>> &_map() override;
   QSettings settings() override;
   QString theme =
@@ -109,12 +112,14 @@ public:
       11
 #endif
       ;
+  bool no_symlinks = true;
   bool logs_enabled = true;
   bool test_after_start = true;
   char startup_update = false;
   int max_log_line = 200;
   int width = 0;
   int height = 0;
+  bool core_use_uds = true;
   int X = 0;
   int Y = 0;
   bool maximized = false;
@@ -124,15 +129,16 @@ public:
   bool save_position = true;
   bool text_under_buttons = true;
   bool manually_column_width = false;
+  bool ask_delete = true;
   QStringList column_width;
   QString language = "";
+  bool first_start = true;
 };
 
 }; // namespace Configs
 
 void updateEmojiFont();
 
-bool createSymlink(const QString &targetPath, const QString &linkPath);
 // QSettings getSettings();
 QSettings getGlobal();
 QString getLocale();
@@ -143,6 +149,7 @@ QString getResource(QString, QStringList dirs = {});
 QString getUpdaterPath();
 #endif
 #ifdef Q_OS_UNIX
+QString getAppImage();
 bool isAppImage();
 #endif
 QString getRootResource(QString str);

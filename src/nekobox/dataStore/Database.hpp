@@ -1,9 +1,65 @@
 #pragma once
 
-#include "nekobox/dataStore/Configs.hpp"
+#include "Configs.hpp"
 #include "ProxyEntity.hpp"
 #include "Group.hpp"
 #include "RouteEntity.h"
+
+namespace Stats {
+    class DatabaseLoggerItem : public JsonStore {
+        public:
+        int created;
+        int deleted;
+        DECLARE_STORE_TYPE(NoSave)
+        NEW_MAP
+            ADD_MAP("new", created, jsonStore);
+            ADD_MAP("del", deleted, jsonStore);
+        STOP_MAP
+    };
+
+    class DatabaseLogger: public JsonStore {
+        public:
+        int start_count = 0;
+        long long first_launch_time = 0;
+        long long last_launch_time = 0;
+
+        std::shared_ptr<DatabaseLoggerItem> profiles = std::make_shared<DatabaseLoggerItem>();
+        std::shared_ptr<DatabaseLoggerItem> groups = std::make_shared<DatabaseLoggerItem>();
+        std::shared_ptr<DatabaseLoggerItem> routes = std::make_shared<DatabaseLoggerItem>();
+        
+        DECLARE_STORE_TYPE(DatabaseLogger)
+        NEW_MAP
+            ADD_MAP("profiles", profiles, jsonStore);
+            ADD_MAP("groups", groups, jsonStore);
+            ADD_MAP("routes", routes, jsonStore);
+            ADD_MAP("start_count", start_count, integer);
+            ADD_MAP("usage_time", usage_time, integer);
+            ADD_MAP("first_launch_time", first_launch_time, integer);
+            ADD_MAP("last_launch_time", last_launch_time, integer);
+            #ifdef NKR_SOFTWARE_KEYS
+            ADD_MAP("failed_auth_count", failed_auth_count, integer);
+            #endif
+        STOP_MAP
+
+        virtual bool Save() override;
+        static long GetTime();
+
+        long long get_usage_time();
+        void initialize();
+
+        #ifdef NKR_SOFTWARE_KEYS
+        int get_failed_auth_count(bool pre_save = false);
+        #endif
+        private:
+        long long usage_time = 0;
+        long long usage_time_update = 0;
+        #ifdef NKR_SOFTWARE_KEYS
+        int failed_auth_count = 0;
+        #endif
+    };
+
+    extern std::unique_ptr<DatabaseLogger> databaseLogger;
+}
 
 namespace Configs {
     const int INVALID_ID = -99999;
@@ -12,13 +68,11 @@ namespace Configs {
 
     extern ProfileManager *profileManager;
 
-    extern QMap<QString, QString> profileDisplayNames; 
-
     class ProfileManager : private JsonStore {
     public:
         // JsonStore
         virtual ConfJsMap _map() override;
-
+        DECLARE_STORE_TYPE(TrafficLooper)
         // order -> id
         QList<int> groupsTabOrder;
 
@@ -37,8 +91,6 @@ namespace Configs {
 
         [[nodiscard]] static QString GetDisplayType(const QString & type);
 
-        [[nodiscard]] static std::shared_ptr<ProxyEntity> NewProxyEntity(const QString &type, bool nullok);
-
         [[nodiscard]] static std::shared_ptr<ProxyEntity> NewProxyEntity(const QString &type);
 
         [[nodiscard]] static std::shared_ptr<Group> NewGroup();
@@ -48,6 +100,11 @@ namespace Configs {
         bool AddProfile(const std::shared_ptr<ProxyEntity> &ent, int gid = -1);
 
         bool AddProfileBatch(const QList<std::shared_ptr<ProxyEntity>> &ents, int gid = -1);
+
+        bool MoveProfile(int id, int gid);
+
+        bool MoveProfileBatch(const QList<int>& ids, int gid);
+        bool MoveProfileBatch(const QList<std::shared_ptr<ProxyEntity>>& ids, int gid);
 
         void DeleteProfile(int id);
 
@@ -86,11 +143,14 @@ namespace Configs {
 
         [[nodiscard]] int NewRouteChainID() const;
 
-        static std::shared_ptr<ProxyEntity> LoadProxyEntity(const QString &jsonPath);
+        static std::shared_ptr<ProxyEntity> LoadProxyEntity(
+            int id
+        //        const QString &jsonPath, const QString &beanPath
+        );
 
-        static std::shared_ptr<Group> LoadGroup(const QString &jsonPath);
+        static std::shared_ptr<Group> LoadGroup(int id);
 
-        static std::shared_ptr<RoutingChain> LoadRouteChain(const QString &jsonPath);
+        static std::shared_ptr<RoutingChain> LoadRouteChain(int id);
 
         void deleteProfile(int id);
     };

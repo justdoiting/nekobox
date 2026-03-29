@@ -1,11 +1,16 @@
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 !languages.txt
+!CMakeLists.txt
+bash.sh
+*.txt
 run.ps1
 .ENV
 global.ini
 translate.py
 TEMP
+script/PKGBUILD
+script/nekobox_temp
 gen-cpp
 core/updater/vendor/*
 core/server/vendor/*

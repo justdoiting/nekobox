@@ -12,24 +12,29 @@ namespace Configs {
         QString data_directory;
         QVariantMap torrc;
 
-        TorBean() : AbstractBean(0) {
+        TorBean(Configs::ProxyEntity * entity) : AbstractBean(entity, 0) {
         }
         
-        INIT_MAP
+        INIT_BEAN_MAP
             ADD_MAP("executable_path", executable_path, string);
             ADD_MAP("extra_args", extra_args, stringList);
             ADD_MAP("data_directory", data_directory, string);
             ADD_MAP("torrc", torrc, stringMap);
         STOP_MAP
-
+/*/
         QString DisplayType() override { return "Tor"; };
+*/
+        CoreObjOutboundBuildResult BuildCoreObjSingBox() const override;
 
-        CoreObjOutboundBuildResult BuildCoreObjSingBox() override;
+        bool TryParseLink(const QString &link) override;
 
-        bool TryParseLink(const QString &link);
+        bool TryParseJson(const QJsonObject &obj) override;
 
-        bool TryParseJson(const QJsonObject &obj);
+        QString ToShareLink() const override;
 
-        QString ToShareLink() override;
+        virtual QString type()const override {
+            return "tor";
+        };
+
     };
 } // namespace Configs

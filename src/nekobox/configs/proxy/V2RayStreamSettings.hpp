@@ -4,8 +4,20 @@
 #include "Preset.hpp"
 
 namespace Configs {
+
+    INIT_ENUM(QUIC)
+        ADD_ENUM_LIST(Preset::SingBox::QUICCongestionControlAlgorithm, 1);
+    STOP_ENUM
+    
+INIT_ENUM(Network)
+    ADD_ENUM_LIST(Preset::SingBox::Network, 1);
+STOP_ENUM
+
     class V2rayStreamSettings : public JsonStore {
     public:
+
+
+        DECLARE_STORE_TYPE(NoSave)
         QString ech_config = "";
         bool enable_ech = false;
         QString query_server_name = "";
@@ -40,7 +52,7 @@ namespace Configs {
                 
         V2rayStreamSettings() : JsonStore() {
         }
-        INIT_MAP_1
+        NEW_MAP
             ADD_MAP("net", network, string);
             ADD_MAP("sec", security, string);
             ADD_MAP("pac_enc", packet_encoding, string);
@@ -118,14 +130,18 @@ namespace Configs {
         }
     };
 
-    inline V2rayStreamSettings *GetStreamSettings(AbstractBean *bean) {
+    inline const V2rayStreamSettings *GetStreamSettingsConst(const AbstractBean *bean) {
         if (bean == nullptr) return nullptr;
-        auto stream_item = bean->_get("stream");
+        auto stream_item = bean->_get_const("stream");
         if (stream_item != nullptr) {
-            auto stream_store = *(JsonStore **) stream_item->getPtr(bean);
+            auto stream_store = *(JsonStore **) stream_item->getPtr((JsonStore*)bean);
             auto stream = (Configs::V2rayStreamSettings *) stream_store;
             return stream;
         }
         return nullptr;
+    }
+
+    inline V2rayStreamSettings *GetStreamSettings(AbstractBean *bean) {
+        return (V2rayStreamSettings*) GetStreamSettingsConst(bean);
     }
 } // namespace Configs
